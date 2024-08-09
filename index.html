@@ -504,11 +504,11 @@
             <p><button id="refresh-btn" onclick="clearCart()">Borrar Carrito</button></p><br>
             <p>Pagar con PayPal:</p><br>
             <div id="paypal-form"></div><br>
-            <select id="payment-method" style="margin-bottom: 10px;" onchange="updateCart()">
-                <option value="efectivo">Efectivo</option>
-                <option value="en línea">En línea</option>
-                <option value="Transferencia">Transferencia</option>
-            </select>
+            <div>
+                <label><input type="radio" name="payment-method" value="efectivo" onchange="updateWhatsAppLink()" checked> Efectivo</label><br>
+                <label><input type="radio" name="payment-method" value="en línea" onchange="updateWhatsAppLink()"> En línea</label><br>
+                <label><input type="radio" name="payment-method" value="Transferencia" onchange="updateWhatsAppLink()"> Transferencia</label>
+            </div>
             <a id="whatsapp-btn" href="#" target="_blank" style="display: none;"><br>
                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
                 Confirmar pedido - Whatsapp
@@ -638,7 +638,6 @@
                 const paypalForm = document.getElementById('paypal-form');
                 const whatsappBtn = document.getElementById('whatsapp-btn');
                 const editCartItems = document.getElementById('edit-cart-items');
-                const paymentMethod = document.getElementById('payment-method').value;
 
                 cartItemsSection.innerHTML = '';
                 editCartItems.innerHTML = '';
@@ -660,7 +659,7 @@
 
                 cartTotal.textContent = `Total: $${total.toFixed(2)}`;
                 updatePayPalForm();
-                updateWhatsAppLink(paymentMethod);
+                updateWhatsAppLink();
             }
 
             function updateCartItemQuantity(index, change) {
@@ -690,9 +689,10 @@
                 `;
             }
 
-            function updateWhatsAppLink(paymentMethod) {
+            function updateWhatsAppLink() {
+                const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
                 const whatsappBtn = document.getElementById('whatsapp-btn');
-                const message = `Orden de Panza Verde:\n${cart.map(item => `${item.name} (${item.quantity}) - $${item.price} c/u`).join('\n')}\nTotal: $${total.toFixed(2)}\nMétodo de pago: ${paymentMethod}`;
+                const message = `Orden de Panza Verde:\n${cart.map(item => `${item.name} (${item.quantity}) - $${item.price} c/u`).join('\n')}\nTotal: $${total.toFixed(2)}\nMétodo de pago: ${selectedPaymentMethod}`;
                 const encodedMessage = encodeURIComponent(message);
                 whatsappBtn.href = `https://wa.me/525526627851?text=${encodedMessage}`;
                 whatsappBtn.style.display = total > 0 ? 'inline-flex' : 'none';
