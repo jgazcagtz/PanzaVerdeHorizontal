@@ -501,14 +501,14 @@
             <h3>🛒 Carrito</h3>
             <div id="cart-items"></div>
             <p id="cart-total">Total: $0.00</p>
-            <p><button id="refresh-btn" onclick="clearCart()">Borrar Carrito</button></p><br>
+            <p><button id="refresh-btn" onclick="clearCart()">🗑️ Borrar Carrito</button></p><br>
             <p>Pagar con PayPal:</p><br>
             <div id="paypal-form"></div><br>
             <div>
-                <label><input type="radio" name="payment-method" value="efectivo" onchange="updateWhatsAppLink()" checked> Efectivo</label><br>
-                <label><input type="radio" name="payment-method" value="en línea" onchange="updateWhatsAppLink()"> En línea</label><br>
-                <label><input type="radio" name="payment-method" value="Transferencia" onchange="updateWhatsAppLink()"> Transferencia</label>
-            </div>
+                <label><input type="radio" name="payment-method" value="efectivo" onchange="updatePaymentMethod(this.value)" checked> Efectivo</label><br>
+                <label><input type="radio" name="payment-method" value="en línea" onchange="updatePaymentMethod(this.value)"> En línea</label><br>
+                <label><input type="radio" name="payment-method" value="Transferencia" onchange="updatePaymentMethod(this.value)"> Transferencia</label>
+            </div><br>
             <a id="whatsapp-btn" href="#" target="_blank" style="display: none;"><br>
                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
                 Confirmar pedido - Whatsapp
@@ -580,7 +580,13 @@
 
             let cart = [];
             let total = 0;
+            let selectedPaymentMethod = "efectivo"; // Default payment method
             let filteredProducts = [...products]; // Create a copy of products to use in filtering
+
+            window.updatePaymentMethod = function(method) {
+                selectedPaymentMethod = method;
+                updateWhatsAppLink();
+            }
 
             function createProductElement(product, index) {
                 const productItem = document.createElement('div');
@@ -690,7 +696,6 @@
             }
 
             function updateWhatsAppLink() {
-                const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
                 const whatsappBtn = document.getElementById('whatsapp-btn');
                 const message = `Orden de Panza Verde:\n${cart.map(item => `${item.name} (${item.quantity}) - $${item.price} c/u`).join('\n')}\nTotal: $${total.toFixed(2)}\nMétodo de pago: ${selectedPaymentMethod}`;
                 const encodedMessage = encodeURIComponent(message);
